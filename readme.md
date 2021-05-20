@@ -65,5 +65,6 @@ pysen run format
 
 ### 5. デプロイ
 
-当リポジトリのmainブランチを、herokuのAutoDeployに設定しています。
-mainブランチへのcommitは、本番環境に即時展開されます。
+当リポジトリのmainブランチを、herokuのAutoDeployに設定しています。<br>
+mainブランチへのcommitは、本番環境に即時展開されます。<br>
+herokuでの環境構築後の起動については、[Procfile](./Procfile)に記載があります。<br>
