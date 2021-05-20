@@ -1,0 +1,1 @@
+web: gunicorn utan:app --log-file=-
