@@ -3,7 +3,7 @@
 ## 1. 用途
 
 　岐阜市のぎふ長良川鵜飼のマスコットキャラクター、<br>
-うーたんとその家族とのおしゃべりを楽しむCode for Gifu内限定のチャットBotです。
+うーたんとその家族とのおしゃべりを楽しむCODE for Gifu内限定のチャットBotです。
 
 [岐阜市のうーたん紹介ページ](https://www.city.gifu.lg.jp/18104.htm)
 
@@ -16,7 +16,7 @@
 
 ### ユーザー環境
 
-[Slack: CODE for Gifu](code4gifu.slack.com)
+[Slack: CODE for Gifu](https://code4gifu.slack.com)
 
 ## 3. 開発環境
 
