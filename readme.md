@@ -48,7 +48,7 @@
     pip3 install -r requirements.txt
     ```
 
-### 4. 読みやすいコードのために
+### 3-2. 読みやすいコードのために
 
 #### Python Linter/Formatter
 
@@ -63,7 +63,7 @@ pysen run format
 
 設定内容は、[pyproject.toml](./pyproject.toml)で確認できます。
 
-### 5. デプロイ
+### 3-3. デプロイ
 
 当リポジトリのmainブランチを、herokuのAutoDeployに設定しています。<br>
 mainブランチへのcommitは、本番環境に即時展開されます。<br>
