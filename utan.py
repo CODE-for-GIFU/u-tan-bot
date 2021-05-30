@@ -4,6 +4,9 @@ import assistant
 from flask import Flask, request
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
+from webhook_posting import WebhookPosting
+
+posting_proc = WebhookPosting()
 
 try:
     from dotenv import load_dotenv
@@ -32,16 +35,11 @@ def read_mention_message(event, say):
     # Watson APIに渡して、解析
     res_output = assistant.message_less(text)
 
-    # 確信度が一番高い、意図を取得
-    intent, error = assistant.get_top_intent(res_output)
+    # WatsonAPI出力から、台本生成
+    script = assistant.utan_message_Switcher(res_output)
 
-    # 意図が取得できない場合、エラーを通知
-    if intent is None:
-        say(r"解析エラーやで、あかんわ。:" + error)
-        return
-
-    # 意図を返事する
-    say(r"{0}".format(intent))
+    # 台本に従い、Webhookにpost
+    posting_proc(script)
 
 
 app = Flask(__name__)

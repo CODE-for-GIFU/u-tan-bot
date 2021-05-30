@@ -1,5 +1,7 @@
 import json
 import os
+import random
+import urllib
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import AssistantV2
@@ -88,7 +90,17 @@ def get_top_intent(response_output: dict):
 #  'comment': string,
 #  'UMember': string
 #  }]
-def utan_message_Switcher(watson_message):
+def utan_message_Switcher(watson_message: dict):
+    if len(watson_message["intents"]) <= 0:
+        # 解析された意図がない場合、デフォルトメッセージを台本として出力
+        return [
+            {
+                "intent": None,
+                "comment": watson_message["generic"][0]["text"],
+                "UMember": "うーたん",
+            }
+        ]
+
     intents = watson_message["intents"][0]
     message = watson_message["generic"][0]
     utan_message = []
