@@ -13,6 +13,11 @@
 
 [Heroku: u-tan-bot](https://dashboard.heroku.com/apps/u-tan-bot)<br>
 言語：Python
+#### Heroku App スリープ解除Bot
+
+Herokuのフリープランでホストする場合、30分毎にAppがスリープ状態になる。<br>
+うーたんBotの動作の妨げになるため、
+[@tetsuji1122](https://github.com/tetsuji1122)氏の個人アカウントから、[UptimeRobot](http://uptimerobot.com/)を設定している。
 
 ### ユーザー環境
 
