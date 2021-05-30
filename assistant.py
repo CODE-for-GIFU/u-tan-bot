@@ -19,6 +19,9 @@ authenticator = IAMAuthenticator(API_KEY)
 assistant = AssistantV2(version="2020-09-24", authenticator=authenticator)
 assistant.set_service_url(SERVICE_URL)
 
+AIRTABLE_SERVICE_URL = os.getenv("AIRTABLE_SERVICE_URL")
+AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
+
 
 def main():
     print("start")
@@ -76,6 +79,73 @@ def get_top_intent(response_output: dict):
     top_intent = response_output[r"intents"][0][r"intent"]
 
     return top_intent, r""
+
+
+# input：Watson - Message
+# Output：WatsonとairtableApiのどちらかを出力(airtableがあれば、airtableを出力)
+#  [{
+#  'intent' : string,
+#  'comment': string,
+#  'UMember': string
+#  }]
+def utan_message_Switcher(watson_message):
+    intents = watson_message["intents"][0]
+    message = watson_message["generic"][0]
+    utan_message = []
+
+    # URLの整理・Airtable-APIからメッセージを取得
+    url = AIRTABLE_SERVICE_URL
+    intent_words = intents["intent"]
+    filterByFormula_words = 'AND(intent="' + intent_words + '")'
+    req_header = {
+        "api_key": AIRTABLE_API_KEY,
+        "filterByFormula": filterByFormula_words,
+        "Content-Type": "application/json",
+    }
+
+    req = urllib.request.Request(
+        "{}?{}".format(url, urllib.parse.urlencode(req_header))
+    )
+    try:
+        with urllib.request.urlopen(req) as response:
+            body = json.loads(response.read())
+
+    except urllib.error.URLError as e:
+        print(e.reason)
+
+    # airtableのデータがあるかどうかで、watsonかairtableどちらを使用するか選定
+    records = body["records"]
+    if not records:
+        utan_message.append(
+            {"intent": intents["intent"], "comment": message["text"], "UMember": "うーたん"}
+        )
+
+    else:
+        fields = []
+        group_no_max = 0
+        for i in range(len(records)):
+            fields.append(records[i]["fields"])
+            if fields[i]["group_no"] > group_no_max:
+                group_no_max = fields[i]["group_no"]
+
+        # ID順に整理
+        fields = sorted(fields, key=lambda x: x["ID"])
+
+        # Group-Noでランダムに選定
+        fields_group = []
+        group_no = random.randint(1, group_no_max)
+        for i in range(len(fields)):
+            if fields[i]["group_no"] == group_no:
+                fields_group.append(fields[i])
+                utan_message.append(
+                    {
+                        "intent": fields[i]["intent"],
+                        "comment": fields[i]["comment"],
+                        "UMember": fields[i]["UMember"],
+                    }
+                )
+
+    return utan_message
 
 
 if __name__ == "__main__":
