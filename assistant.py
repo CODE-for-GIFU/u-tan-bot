@@ -148,11 +148,9 @@ def utan_message_Switcher(watson_message: dict):
         fields = sorted(fields, key=lambda x: x["ID"])
 
         # Group-Noでランダムに選定
-        fields_group = []
         group_no = random.randint(1, group_no_max)
         for i in range(len(fields)):
             if fields[i]["group_no"] == group_no:
-                fields_group.append(fields[i])
                 utan_message.append(
                     {
                         "intent": fields[i]["intent"],
