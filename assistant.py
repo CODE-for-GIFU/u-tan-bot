@@ -24,6 +24,10 @@ assistant.set_service_url(SERVICE_URL)
 AIRTABLE_SERVICE_URL = os.getenv("AIRTABLE_SERVICE_URL")
 AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
 
+NAGARA_RIVER_API_URL = os.getenv("NAGARA_RIVER_API_URL")
+NAGARA_RIVER_FLOODING_LV_1 = 17.36
+NAGARA_RIVER_FLOODING_LV_2 = 18.54
+
 
 def main():
     print("start")
@@ -157,6 +161,45 @@ def utan_message_Switcher(watson_message: dict):
                     }
                 )
 
+        # 意図に応じて、データを結合する
+        if intent_words == "水位":
+            url = NAGARA_RIVER_API_URL
+            req_header = {
+                "Content-Type": "application/json",
+            }
+
+            req = urllib.request.Request(
+                "{}?{}".format(url, urllib.parse.urlencode(req_header))
+            )
+
+            try:
+                with urllib.request.urlopen(req) as response:
+                    body = json.loads(response.read())
+
+            except urllib.error.URLError as e:
+                print(e.reason)
+
+            nagara_river_water_level = body["records"][0][1]
+
+            # メッセージ中のパラメータ置き換え
+            utan_message_water_level = ""
+            for i in range(len(utan_message)):
+                utan_message[i]["comment"] = utan_message[i]["comment"].replace("%water_level", nagara_river_water_level)
+
+            # 水位に応じたうーたんのメッセージの追加
+            if float(nagara_river_water_level) >= NAGARA_RIVER_FLOODING_LV_2:
+                utan_message_water_level = "はん濫発生レベル2(はん濫注意水位)以上や。避難勧告出たら今すぐ避難や。"
+            elif float(nagara_river_water_level)  >= NAGARA_RIVER_FLOODING_LV_1:
+                utan_message_water_level = "はん濫発生レベル1(はん濫注意水位)や。落ち着いて行動するんやで。"
+            else:
+                utan_message_water_level = "まぁまぁやな。鵜がとれんときもある。"
+            utan_message.append(
+                {
+                    "intent": "水位",
+                    "comment": utan_message_water_level,
+                    "UMember": "うーたん",
+                }
+            )
     return utan_message
 
 
