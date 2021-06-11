@@ -201,7 +201,7 @@ def utan_message_Switcher(watson_message: dict):
                 elif float(nagara_river_water_level) >= NAGARA_RIVER_FLOODING_LV_1:
                     utan_message_water_level = "はん濫発生レベル1(はん濫注意水位)や。落ち着いて行動するんやで。"
                 else:
-                    utan_message_water_level = "まぁまぁやな。鵜がとれんときもある。"
+                    utan_message_water_level = "まぁまぁやな。鮎がとれんときもある。"
                 utan_message.append(
                     {
                         "intent": "水位",
