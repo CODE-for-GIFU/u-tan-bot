@@ -2,6 +2,7 @@ import json
 import os
 import random
 import urllib
+from datetime import datetime
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import AssistantV2
@@ -209,7 +210,28 @@ def utan_message_Switcher(watson_message: dict):
                         "UMember": "うーたん",
                     }
                 )
+
+    add_random_mesage(utan_message)
+
     return utan_message
+
+
+def add_random_mesage(utan_message: list):
+    """台本に秒数ランダムなメッセージを付与します。
+
+    Args:
+        utan_message (list): 台本を収めたlist [Update]
+    """
+    current_sec = datetime.now().second
+
+    if current_sec % 3 == 0:
+        utan_message.append(
+            {
+                "intent": utan_message[-1]["intent"],
+                "comment": "あー" if current_sec % 2 == 0 else "うー",
+                "UMember": "うーたろ",
+            }
+        )
 
 
 if __name__ == "__main__":
