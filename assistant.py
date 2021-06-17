@@ -228,7 +228,7 @@ def add_random_mesage(utan_message: list):
         utan_message.append(
             {
                 "intent": utan_message[-1]["intent"],
-                "comment": "あー" if current_sec % 2 == 0 else "うー",
+                "comment": "あー" if current_sec % 2 == 0 else "ゆー",
                 "UMember": "うーたろ",
             }
         )
