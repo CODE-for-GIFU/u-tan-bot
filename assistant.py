@@ -96,19 +96,22 @@ def get_top_intent(response_output: dict):
 #  'UMember': string
 #  }]
 def utan_message_Switcher(watson_message: dict):
+    # Watson出力から、メッセージを抽出
+    message = [
+        item for item in watson_message["generic"] if item["response_type"] == "text"
+    ][0]
+
     if len(watson_message["intents"]) <= 0:
         # 解析された意図がない場合、デフォルトメッセージを台本として出力
         return [
             {
                 "intent": None,
-                "comment": watson_message["generic"][0]["text"],
+                "comment": message["text"],
                 "UMember": "うーたん",
             }
         ]
 
     intents = watson_message["intents"][0]
-    message = watson_message["generic"][0]
-    utan_message = []
 
     # URLの整理・Airtable-APIからメッセージを取得
     url = AIRTABLE_SERVICE_URL
@@ -131,6 +134,7 @@ def utan_message_Switcher(watson_message: dict):
         print(e.reason)
 
     # airtableのデータがあるかどうかで、watsonかairtableどちらを使用するか選定
+    utan_message = []
     records = body["records"]
     if not records:
         utan_message.append(
